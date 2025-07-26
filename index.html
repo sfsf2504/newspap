@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting…</title>
+  <title>3 Girls 💬...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -42,4 +42,26 @@
   <h2>Загрузка…</h2>
   <div class="loader"></div>
 </body>
+<script>
+  const titles = [
+    "💬Emily.",
+    "💬Emily..",
+    "💬Emily...",
+  ];
+
+  let index = 0;
+
+  setInterval(() => {
+    document.title = titles[index];
+    if (index + 1 >= titles.length)
+    {
+      index = 0
+    }
+    else
+    {
+      index = (index + 1)
+    }
+    document.title = titles[index];
+  }, 500); // 500 мс = 0.5 секунды
+</script>
 </html>
