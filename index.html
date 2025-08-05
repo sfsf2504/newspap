@@ -2,261 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Emily Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="Trafficstars" content="73308">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loading...</title>
   <style>
-    body {
-      background: black;
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      text-align: center;
-      position: relative;
-      min-height: 100vh;
+      height: 100%;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow: hidden;
+    }
+
+    .fog {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 80%);
+      animation: moveFog 30s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes moveFog {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-10%, -10%); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
       display: flex;
-      flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+      height: 100%;
+      padding-left: 5vw;
     }
 
-    video#bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin-top: 40px;
-      margin-bottom: 20px;
-      transition: all 1s ease;
-    }
-
-    h2.slide-down {
-      margin-top: 140px;
-      opacity: 0.9;
-    }
-
-    .question-box {
-      background-color: rgba(0, 0, 0, 0.4);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 0, 100, 0.4);
+    .text {
+      font-size: 1.5em;
+      line-height: 1.4em;
       max-width: 400px;
-      width: 90%;
-      margin: 10px auto;
-      transition: opacity 0.5s ease;
+      opacity: 0.85;
+      animation: fadeIn 4s ease-in-out forwards;
+      transform: translateY(10%);
+      height: 75vh;
+      display: flex;
+      align-items: flex-end;
     }
 
-    .question {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-    }
-
-    .option {
-      display: block;
-      background: #333;
-      border: none;
-      padding: 14px;
-      margin: 10px auto;
-      border-radius: 12px;
-      color: white;
-      cursor: pointer;
-      font-size: 1rem;
-      width: 80%;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    .option:hover {
-      background: #ff0077;
-      transform: scale(1.05);
-    }
-
-    .loader {
-      margin: 30px auto;
-      border: 5px solid #333;
-      border-top: 5px solid #fff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    .final-screen {
-      display: none;
-      margin-top: 30px;
-      max-width: 400px;
-      color: white;
-      font-size: 1.3rem;
-      text-align: center;
-      background: rgba(0,0,0,0.5);
-      padding: 20px;
-      border-radius: 15px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20%);
+      }
+      to {
+        opacity: 0.85;
+        transform: translateY(10%);
+      }
     }
   </style>
 </head>
 <body>
-
-  <link rel="stylesheet" href="//cdn.tsyndicate.com/sdk/v1/interstitial.ts.css" />
-<script src="//cdn.tsyndicate.com/sdk/v1/interstitial.ts.js"></script>
-
-<video autoplay muted loop id="bg-video">
-  <source src="small_video.mp4" type="video/mp4">
-</video>
-
-<h2 id="title-text">Adult Fucks</h2>
-
-<div class="question-box" id="question-box"></div>
-
-<div class="loader" id="loader"></div>
-
-<div class="final-screen" id="final-screen">
-  <p id="final-text"></p>
-  <button id="redirect-btn" class="option" style="width: 60%; margin-top: 20px;">Continue</button>
-</div>
-
-<script>
-  // Title animation loop
-  const titles = ["💬Emily", "💬Emily.", "💬Emily..", "💬Emily..."];
-  let titleIndex = 0;
-  let stopTitleLoop = false;
-  var tit = document.getElementById("title-text");
-  const titleInterval = setInterval(() => {
-    if (!stopTitleLoop) {
-      tit.textContent = titles[titleIndex];
-      titleIndex = (titleIndex + 1) % titles.length;
-    }
-  }, 500);
-
-  // Questions setup
-  const questions = [
-    {
-      question: "Are you 18 or older?",
-      options: [
-        { text: "Yes, I'm 18+", value: "adult" },
-        { text: "No, I'm under 18", value: "minor" }
-      ]
-    },
-    {
-      question: "Do you prefer submissive or dominant girls?",
-      options: [
-        { text: "Submissive", value: "casual" },
-        { text: "Between", value: "adventurous" },
-        { text: "Dominant", value: "unsure" }
-      ]
-    },
-    {
-      question: "What's your favorite girl body type?",
-      options: [
-        { text: "Thick", value: "morning" },
-        { text: "Regular", value: "evening" },
-        { text: "Small", value: "night" }
-      ]
-    },
-    {
-      question: "When do you prefer having sex?",
-      options: [
-        { text: "Morning", value: "morning" },
-        { text: "Evening", value: "evening" },
-        { text: "Night", value: "night" }
-      ]
-    }
-  ];
-
-  let currentQuestionIndex = 0;
-  const questionBox = document.getElementById("question-box");
-  const loader = document.getElementById("loader");
-  const titleEl = document.getElementById("title-text");
-
-  function renderQuestion() {
-    const q = questions[currentQuestionIndex];
-    questionBox.innerHTML = `<div class="question">${q.question}</div>` +
-      q.options.map(opt => `<button class="option" onclick="handleAnswer('${opt.value}')">${opt.text}</button>`).join("");
-  }
-
-  function handleAnswer(value) {
-    loader.style.display = "block";
-    questionBox.style.display = "none";
-
-    setTimeout(() => {
-      if (value === "minor") {
-        loader.style.display = "none";
-        questionBox.style.display = "block";
-        alert("Sorry, you must be 18 or older to continue.");
-        return;
-      }
-
-      currentQuestionIndex++;
-
-      if (currentQuestionIndex >= questions.length) {
-        stopTitleLoop = true;
-
-        titleEl.classList.add("slide-down");
-        titleEl.textContent = "Almost ready...";
-
-        setTimeout(() => {
-          loader.style.display = "none";
-          document.getElementById("final-screen").style.display = "block";
-          titleEl.textContent = "Emily Chat";
-
-          const girlsCount = Math.floor(Math.random() * (50 - 15 + 1)) + 15;
-          document.getElementById("final-text").innerHTML = `We found <b>${girlsCount}</b> girls near you.<br>Click to continue.`;
-
-          document.getElementById("redirect-btn").onclick = () => {
-               InterstitialTsAd({
-                spot: "ebc1ee5348f541efad14bd60c65fd6f1",
-                extid: "iel",
-              });
-            window.location.href = "https://www.profitableratecpm.com/jhc6ky8wu?key=4a249ccbf467bf8b98b88c59f08c3a12";
-          };
-        }, 3000);
-      } else {
-        loader.style.display = "none";
-        questionBox.style.display = "block";
-        renderQuestion();
-      }
-    }, 1000);
-  }
-
-  renderQuestion();
-</script>
-<script type="text/javascript" src="//cdn.tsyndicate.com/sdk/v1/p.js" data-ts-spot="06b0a973f90f4c8da09edace0b9d86b5" data-ts-extid="{extid}" async defer></script>
-<script src="//cdn.tsyndicate.com/sdk/v1/push.notification.js"></script>
-<link type="text/css" rel="stylesheet" href="//cdn.tsyndicate.com/sdk/v1/push.notification.css">
-<script>
-   TSPushNotification({
-       spot: "7b37e859e685427e9883f09a6de0de80",
-       content: {
-           body: "Tap Allow to subscribe and receive updates from us",
-           btnYes: "Allow",
-           btnNo: "Decline",
-       },
-       style: {
-           body: {
-               backgroundColor: "#ffffff",
-               color: "#000000"
-           },
-           btnYes: {
-               backgroundColor: "#f800ff"
-           },
-           btnNo: {
-               color: "undefined"
-           },
-       },
-   });
-</script>
+  <div class="fog"></div>
+  <div class="container">
+    <div class="text">
+      Kai Engel – Remedy for Melancholy
+    </div>
+  </div>
 </body>
 </html>
