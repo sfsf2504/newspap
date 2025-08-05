@@ -72,8 +72,35 @@
       Kai Engel – Remedy for Melancholy
     </div>
   </div>
-  <audio autoplay loop preload="auto" volume="0.5">
+
+  <audio id="bgmusic" loop preload="auto">
     <source src="music.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
   </audio>
+
+  <script>
+    window.onload = () => {
+      const audio = document.getElementById("bgmusic");
+      const button = document.createElement("button");
+      button.textContent = "Включить музыку";
+      Object.assign(button.style, {
+        position: "absolute",
+        top: "20px",
+        right: "20px",
+        padding: "10px 20px",
+        background: "#111",
+        color: "#fff",
+        border: "1px solid #444",
+        cursor: "pointer",
+        zIndex: 9999
+      });
+      button.onclick = () => {
+        audio.volume = 0.4;
+        audio.play().catch(e => console.log("Autoplay error:", e));
+        button.remove();
+      };
+      document.body.appendChild(button);
+    };
+  </script>
 </body>
 </html>
